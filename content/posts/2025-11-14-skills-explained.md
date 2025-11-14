@@ -1,11 +1,8 @@
 ---
-date: '2025-11-14T16:38:30-08:00'
-description: '---'
+title: "Understanding Claude Skills"
+date: 2025-11-14
 draft: false
-params:
-  source: https://www.claude.com/blog/skills-explained
-tags: []
-title: Understanding Claude Skills
+tags: ["claude", "ai"]
 ---
 
 ## Key Insight 1
