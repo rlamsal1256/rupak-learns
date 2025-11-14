@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}New Note - Write Notes Helper{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Capture New Note</h2>
+
+    <form method="POST" id="captureForm">
+        <div class="form-group">
+            <label for="source_url">Source URL *</label>
+            <input type="url" id="source_url" name="source_url" required
+                   placeholder="https://example.com/article">
+        </div>
+
+        <div id="highlights">
+            <div class="highlight-section">
+                <h3>Highlight 1</h3>
+                <div class="form-group">
+                    <label for="quote_0">Quote / Highlight</label>
+                    <textarea id="quote_0" name="quote_0" rows="4"
+                              placeholder="Paste the quote or highlight here..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="commentary_0">Your Commentary</label>
+                    <textarea id="commentary_0" name="commentary_0" rows="4"
+                              placeholder="Add your thoughts, analysis, or notes..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <button type="button" class="btn btn-secondary" id="addHighlight">
+            + Add Another Highlight
+        </button>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Save Draft</button>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+{% endblock %}

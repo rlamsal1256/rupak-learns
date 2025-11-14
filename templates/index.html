@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Drafts - Write Notes Helper{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Your Drafts</h2>
+
+    {% if drafts %}
+    <table class="drafts-table">
+        <thead>
+            <tr>
+                <th>Created</th>
+                <th>Source</th>
+                <th>Tags</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for draft in drafts %}
+            <tr>
+                <td>{{ draft.created_at[:10] }}</td>
+                <td>
+                    <a href="{{ draft.source_url }}" target="_blank" rel="noopener">
+                        {{ draft.source_url | truncate(50) }}
+                    </a>
+                </td>
+                <td>
+                    {% if draft.tags %}
+                        {{ draft.tags | join(', ') }}
+                    {% else %}
+                        <span class="text-muted">-</span>
+                    {% endif %}
+                </td>
+                <td class="actions">
+                    <a href="{{ url_for('edit_note', filename=draft.filename) }}" class="btn btn-small">Edit</a>
+                    <a href="#" class="btn btn-small">Preview</a>
+                    <a href="#" class="btn btn-small btn-primary">Publish</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <p>No drafts yet. <a href="{{ url_for('new_note') }}">Create your first note</a></p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

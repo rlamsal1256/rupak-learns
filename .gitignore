@@ -1,3 +1,14 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+*.egg
+
 # Node
 node_modules/
 npm-debug.log*
@@ -7,7 +18,6 @@ package-lock.json
 yarn.lock
 
 # Build outputs
-dist/
 build/
 _site/
 .cache/
