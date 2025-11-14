@@ -1,27 +1,28 @@
 # Rupak Learns
 
-A simple blog for documenting weekly learnings.
+A simple blog for documenting weekly learnings. Built with Hugo and deployed to GitHub Pages.
 
 ## How to Add a Post
 
-Create a new markdown file in the `posts/` directory:
+Create a new markdown file in the `content/posts/` directory:
 
 ```bash
-# Using date format (recommended for chronological ordering)
-posts/2025-11-14-topic-name.md
-
-# Or just topic name
-posts/learning-about-x.md
+hugo new content posts/2025-11-14-topic-name.md
 ```
+
+Or manually create: `content/posts/2025-11-14-topic-name.md`
 
 ## Post Format
 
-Each post should start with a basic header:
+Each post requires Hugo front matter:
 
 ```markdown
-# Title of What I Learned
-
-**Date:** 2025-11-14
+---
+title: "Title of What I Learned"
+date: 2025-11-14
+draft: false
+tags: ["tag1", "tag2"]
+---
 
 ## Summary
 
@@ -37,19 +38,30 @@ The meat of the content...
 - References
 ```
 
+## Local Development
+
+```bash
+# Start local server (with drafts)
+hugo server -D
+
+# Build site
+hugo
+
+# View at http://localhost:1313
+```
+
 ## Searching Posts
 
 ```bash
 # Search by keyword
-grep -r "keyword" posts/
+grep -r "keyword" content/posts/
 
 # Search by date
-ls posts/ | grep "2025-11"
+ls content/posts/ | grep "2025-11"
 ```
 
-## Future Enhancements
+## Deployment
 
-- Add static site generator (Eleventy, Hugo, etc.)
-- Deploy to GitHub Pages or Netlify
-- Add tags/categories
-- RSS feed
+Site automatically deploys to GitHub Pages via GitHub Actions when pushing to main branch.
+
+**Live site:** https://rlamsal.github.io/rupak-learns/

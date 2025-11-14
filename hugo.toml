@@ -1,0 +1,30 @@
+baseURL = 'https://rlamsal.github.io/rupak-learns/'
+languageCode = 'en-us'
+title = 'Rupak Learns'
+theme = 'PaperMod'
+
+[params]
+  description = 'A simple blog for documenting weekly learnings'
+  author = 'Rupak'
+  ShowReadingTime = true
+  ShowShareButtons = false
+  ShowPostNavLinks = true
+  ShowBreadCrumbs = true
+  ShowCodeCopyButtons = true
+  ShowWordCount = true
+
+[params.homeInfoParams]
+  Title = 'Rupak Learns'
+  Content = 'Documenting weekly learnings and technical explorations'
+
+[[menu.main]]
+  identifier = 'posts'
+  name = 'Posts'
+  url = '/posts/'
+  weight = 10
+
+[[menu.main]]
+  identifier = 'search'
+  name = 'Search'
+  url = '/search/'
+  weight = 20
