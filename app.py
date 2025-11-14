@@ -1,6 +1,9 @@
 """Flask app for note-taking and blog writing."""
+import os
 from flask import Flask, render_template, request, redirect, url_for, flash
+from markdown import markdown
 from utils.markdown_handler import save_draft, load_draft, list_drafts
+from utils.hugo_converter import publish_draft, transform_to_hugo_content
 
 app = Flask(__name__)
 app.secret_key = 'dev-secret-key-change-in-production'
@@ -90,7 +93,6 @@ def edit_note(filename):
             return redirect(url_for('edit_note', filename=filename))
 
         # Save draft (will overwrite with same filename)
-        import os
         os.remove(os.path.join('drafts', filename))
         new_filename = save_draft(source_url, highlights)
         flash(f'Draft updated: {new_filename}', 'success')
@@ -99,6 +101,55 @@ def edit_note(filename):
     # Load existing draft
     draft = load_draft(filename)
     return render_template('edit.html', draft=draft)
+
+
+@app.route('/preview/<filename>')
+def preview_note(filename):
+    """Preview a draft as it will appear when published."""
+    draft = load_draft(filename)
+
+    # Load raw content from draft file
+    draft_path = os.path.join('drafts', filename)
+    import frontmatter
+    with open(draft_path, 'r') as f:
+        draft_post = frontmatter.load(f)
+
+    # Transform to Hugo format
+    hugo_content = transform_to_hugo_content(draft_post.content)
+
+    # Add source link
+    source_url = draft_post.get('source_url', '')
+    if source_url:
+        hugo_content += f"\n\n---\n\n**Source:** [{source_url}]({source_url})\n"
+
+    # Render markdown to HTML
+    html_content = markdown(hugo_content, extensions=['fenced_code', 'tables', 'nl2br'])
+
+    return render_template('preview.html',
+                         draft=draft,
+                         html_content=html_content,
+                         filename=filename)
+
+
+@app.route('/publish/<filename>', methods=['POST'])
+def publish_note(filename):
+    """Publish a draft to Hugo posts."""
+    title = request.form.get('title', '').strip()
+
+    try:
+        published_filename = publish_draft(filename, title or None)
+        flash(f'Published: {published_filename}', 'success')
+
+        # Delete draft after publishing
+        draft_path = os.path.join('drafts', filename)
+        if os.path.exists(draft_path):
+            os.remove(draft_path)
+
+    except Exception as e:
+        flash(f'Error publishing: {str(e)}', 'error')
+        return redirect(url_for('preview_note', filename=filename))
+
+    return redirect(url_for('index'))
 
 
 if __name__ == '__main__':
