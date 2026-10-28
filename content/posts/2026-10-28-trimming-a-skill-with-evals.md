@@ -5,7 +5,7 @@ draft: false
 tags: ["claude", "ai", "skills", "evals"]
 ---
 
-**TL;DR:** I cut my triage-review skill from 994 to 730 words (27% shorter) with no loss in quality. Tested on five replayed PR reviews, the trimmed skill passed 98–100% of checks, as well as the full skill. The same method works for any skill.
+**TL;DR:** I cut my triage-review skill from 994 to 730 words (27% shorter) with no loss in quality. Tested on five replayed PR reviews, the trimmed skill passed 98–100% of checks, matching the full skill. The same method works for any skill.
 
 ## Background
 
@@ -20,7 +20,7 @@ Claude Code's built-in eval runner, `claude plugin eval`, runs each test case tw
 
 1. **Real cases.** Five already-merged PRs from the team's web app (404, 470, 524, 540, 541). I snapshotted each diff and its review comments, removed anything that gave away the outcome, and ran offline.
 2. **Known answers.** For every comment I wrote down the correct verdict, based on what I actually did. A judge model (Sonnet) scores each answer against it: 51 checks in total.
-3. **One trap.** pr-470 replays reviewer claims that the code had already fixed. The right answer is to push back, not to change code.
+3. **One trap.** pr-470 replays a review bot's claims about bugs the code had already fixed. The right answer is to push back, not to change code.
 4. **Three runs each,** because a single run is too noisy.
 
 ## Result 1: the skill matters, mostly for restraint
@@ -54,7 +54,7 @@ Compare individual checks, not the overall %. A 3-point swing overall is noise; 
 
 ## What changed in the skill
 
-The final 730-word skill passed 50 or 51 of 51 checks in two fresh runs (no skill: 75–78%). 98–100% vs. 96–98% for the full skill is within noise, so the claim is "as good," not "better."
+The final 730-word skill passed 50 or 51 of 51 checks in two fresh runs, while no skill scored 75–78% in the same runs. 98–100% vs. 96–98% for the full skill is within noise, so the claim is "as good," not "better."
 
 | Section | Decision | Why |
 | --- | --- | --- |
@@ -71,7 +71,7 @@ All you need is Claude Code and a skill folder with a `SKILL.md`.
 1. **Pick 3–5 real past tasks** the skill handled, where you know the right outcome. Invented cases only test what you already believe.
 2. **Snapshot the inputs as they were before the outcome.** Strip anything that gives it away (my first snapshot still said MERGED, and the model acted on it).
 3. **Write one check per decision,** phrased as the correct call ("declines the nitpick about test file layout"). Reread the checks as critically as the answers; one of mine failed correct answers until I reworded it.
-4. **Run with vs. without the skill:** `claude plugin eval . --scaffold --trust-plugin --no-publish --judge-model sonnet -j 4` from the skill folder, with `--ablation with-without`. Three runs per case. Block Bash and network access, or the model may look up the real answer.
+4. **Run with vs. without the skill.** From the skill folder, run `claude plugin eval . --ablation with-without --runs 3 --trust-plugin --no-publish --judge-model sonnet -j 4`. Add `--scaffold` if your cases use a scaffold script to set up files. Don't give the model Bash or web access. With `gh` or a browser it can fetch the real review thread and copy the answer.
 5. **Look for dead weight.** Make copies of `SKILL.md` with sections removed and rerun. Remove several sections at once: if a rule is repeated, removing one copy shows nothing.
 6. **Keep what the tests can't see.** Offline runs never push code, run CI or post comments, so leave those sections in.
 
